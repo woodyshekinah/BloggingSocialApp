@@ -50,11 +50,26 @@ app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 
 //MONGOOSE SETUP
-const PORT = process.env.PORT || 6001;
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-}).catch((error) => console.log(`${error} did not connect`));
+
+// Import dotenv using ES module syntax
+
+dotenv.config();
+
+// Construct MongoDB URI using environment variables
+const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
+// Async function to connect to MongoDB
+const connectDB = async () => {
+  try {
+    await mongoose.connect(uri);
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('Failed to connect to MongoDB', err);
+  }
+};
+
+// Call the async function
+connectDB();
+
+
 
